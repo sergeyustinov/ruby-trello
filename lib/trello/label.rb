@@ -46,7 +46,7 @@ module Trello
     define_attribute_methods [:color]
 
     def color
-      @attributes[:color]
+      @trello_attributes[:color]
     end
 
     def color= colour
@@ -55,8 +55,8 @@ module Trello
         return Trello.logger.warn "The label colour '#{colour}' does not exist."
       end
 
-      self.send(:"color_will_change!") unless colour == @attributes[:color]
-      @attributes[:color] = colour
+      self.send(:"color_will_change!") unless colour == @trello_attributes[:color]
+      @trello_attributes[:color] = colour
     end
 
     # Update the fields of a label.

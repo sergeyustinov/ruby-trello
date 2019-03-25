@@ -49,16 +49,18 @@ module Trello
       # Defines the attribute getter and setters.
       class_eval do
         define_method :attributes do
-          @attributes ||= names.reduce({}) { |hash, k| hash.merge(k.to_sym => nil) }
+          @trello_attributes ||= names.reduce({}) { |hash, k| hash.merge(k.to_sym => nil) }
         end
 
         names.each do |key|
-          define_method(:"#{key}") { @attributes[key] }
+          instance_variable_set("@#{key}", nil)
+          define_method(:"#{key}") { @trello_attributes[key] }
 
           unless options[:readonly].include?(key.to_sym)
             define_method :"#{key}=" do |val|
-              send(:"#{key}_will_change!") unless val == @attributes[key]
-              @attributes[key] = val
+              send(:"#{key}_will_change!") unless val == @trello_attributes[key]
+              @trello_attributes[key] = val
+              instance_variable_set("@#{key}", val)
             end
           end
         end
